@@ -51,8 +51,8 @@ class Character(db.Model):
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     gender: Mapped[str] = mapped_column(String(20), nullable=False)
     age: Mapped[int] = mapped_column(Integer)
-    ocupation: Mapped[str] = mapped_column(String(120))
-    favorited_by_user: Mapped[list["User"]] = db.relationship(
+    occupation: Mapped[str] = mapped_column(String(120))
+    favorited_by_user: Mapped[list["User"]] = relationship(
         "User",
         secondary = favorites_characters,
         back_populates = "favorites_characters"
@@ -65,7 +65,7 @@ class Character(db.Model):
             "name": self.name,
             "gender": self.gender,
             "age": self.age,
-            "ocupation": self.ocupation
+            "ocupation": self.occupation
         }
     
 
@@ -76,7 +76,7 @@ class Location(db.Model):
     town: Mapped[str] = mapped_column(String(50))
     use: Mapped[str] = mapped_column(String(50))
 
-    favorited_by_user: Mapped[list["User"]] = db.relationship(
+    favorited_by_user: Mapped[list["User"]] = relationship(
         "User",
         secondary = favorites_locations,
         back_populates = "favorites_locations"
