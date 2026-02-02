@@ -7,15 +7,15 @@ db = SQLAlchemy()
 favorites_characters = Table(
     "favorites_characters",
     db.Model.metadata,
-    Column("user_id", ForeignKey("user.id"), primary_key=True),
-    Column("character_id", ForeignKey("character.id"), primary_key=True),
+    Column("user_id", Integer, ForeignKey("user.id"), primary_key=True),
+    Column("character_id", Integer, ForeignKey("character.id"), primary_key=True),
 )
 
 favorites_locations = Table(
     "favorites_locations",
     db.Model.metadata,
-    Column("user_id", ForeignKey("user.id"), primary_key=True),
-    Column("location_id", ForeignKey("location.id"), primary_key=True),
+    Column("user_id", Integer, ForeignKey("user.id"), primary_key=True),
+    Column("location_id", Integer, ForeignKey("location.id"), primary_key=True),
 )
 
 
@@ -24,12 +24,12 @@ class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(String(120), unique=True, nullable=False)
     password: Mapped[str] = mapped_column(nullable=False)
-    favorites_characters: Mapped[list["Character"]] = db.relationship(
+    favorites_characters: Mapped[list["Character"]] = relationship(
         "Character",
         secondary = favorites_characters,
         back_populates = "favorited_by_user"
     )
-    favorites_locations: Mapped[list["Location"]] = db.relationship(
+    favorites_locations: Mapped[list["Location"]] = relationship(
         "Location",
         secondary = favorites_locations,
         back_populates = "favorited_by_user"
@@ -41,11 +41,12 @@ class User(db.Model):
             "id": self.id,
             "email": self.email,
             "favorite_characters": [character.serialize() for character in self.favorites_characters],
-            "favorite_locations": [location.seralize() for location in self.favorites_locations],
+            "favorite_locations": [location.serialize() for location in self.favorites_locations],
             # do not serialize the password, its a security breach
         }
 
 class Character(db.Model):
+    __tablename__ = "character"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(20), nullable=False)
     gender: Mapped[str] = mapped_column(String(20), nullable=False)
@@ -69,6 +70,7 @@ class Character(db.Model):
     
 
 class Location(db.Model):
+    __tablename__ = "location"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     town: Mapped[str] = mapped_column(String(50))
