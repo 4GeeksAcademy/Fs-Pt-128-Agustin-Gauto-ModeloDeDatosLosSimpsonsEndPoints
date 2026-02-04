@@ -34,5 +34,30 @@ def get_character_id(character_id):
         return jsonify({"error": "Character not found"}), 400
     return jsonify(character.serialize()), 200
 
+@api.route("/location", methods=["GET"])
+def get_location():
+    locations = db.session.execute(select(Location)).scalars().all()
+    response = [location.serialize() for location in locations]
+    return jsonify(response), 200
+
+@api.route("/location/<int:location_id>", methods=["GET"])
+def get_location_id(location_id):
+    location = db.session.get(Location, location_id)
+    if not location:
+        return jsonify({"error": "Location not found"}), 400
+    return jsonify(location.serialize()), 200
+
+@api.route("/users", methods=["POST"])
+def create_user():
+    data = request.get_json()
+    if not data.get("email") or not data.get("password"):
+        return jsonify({"error" : "All data is required"}), 400
+    new_user = User (
+        email = data["email"],
+        password = data["password"]
+    )
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({"usuario" : "creado correctamente"}), 201
 
 
