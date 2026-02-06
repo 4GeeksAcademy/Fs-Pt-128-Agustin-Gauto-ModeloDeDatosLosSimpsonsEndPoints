@@ -40,8 +40,8 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            "favorite_characters": [character.serialize() for character in self.favorites_characters],
-            "favorite_locations": [location.serialize() for location in self.favorites_locations],
+            "favorites_characters": [character.serialize() for character in self.favorites_characters],
+            "favorites_locations": [location.serialize() for location in self.favorites_locations],
             # do not serialize the password, its a security breach
         }
 
